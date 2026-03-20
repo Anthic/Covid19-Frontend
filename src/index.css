@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+body {
+  background-color: #0f172a; /* Slate 900 for dark theme */
+  color: #f8fafc;
+  overflow-x: hidden;
+}
+
+/* Hide default cursor only on non-touch devices */
+@media (hover: hover) and (pointer: fine) {
+  body {
+    cursor: none;
+  }
+}
+
+/* Text outline utility for hover effects */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.4);
+  transition: all 0.3s ease;
+}
+
+.text-outline:hover {
+  color: white;
+  -webkit-text-stroke: 1px transparent;
+}
