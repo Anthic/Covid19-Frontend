@@ -1,0 +1,223 @@
+/* ═══════════════════════════════════════════════════════════
+   SMS-STYLE TOAST  —  complete CSS, slightly upscaled for visibility
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Portal / stack ───────────────────────────────────────── */
+.sms-toast-portal {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  pointer-events: none;
+  width: 360px;
+}
+
+/* ── Individual toast row ─────────────────────────────────── */
+.sms-toast {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  pointer-events: auto;
+
+  /* slide-in from right */
+  animation: sms-slide-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  will-change: transform, opacity;
+}
+
+/* exit state */
+.sms-toast.exiting {
+  animation: sms-slide-out 0.32s ease-in forwards;
+}
+
+/* ── Avatar / sender chip ─────────────────────────────────── */
+.sms-avatar {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #0f172a; /* darker background to contrast bubble */
+  color: #f8fafc;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Bubble wrapper ───────────────────────────────────────── */
+.sms-bubble {
+  position: relative;
+  background: #1e293b;
+  border-radius: 20px 20px 20px 6px;
+  padding: 14px 18px 12px;
+  min-width: 260px;
+  max-width: 310px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: box-shadow 0.18s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05); /* very subtle border */
+}
+
+.sms-bubble:hover {
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Close button ─────────────────────────────────────────── */
+.sms-close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.sms-close:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ── Header row  (tag + time) ─────────────────────────────── */
+.sms-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  padding-right: 20px;
+}
+
+.sms-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.sms-time {
+  font-size: 11px;
+  color: #475569;
+}
+
+/* ── Title ────────────────────────────────────────────────── */
+.sms-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.4;
+}
+
+/* ── Body / message ───────────────────────────────────────── */
+.sms-body {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+
+/* ── Read receipt ─────────────────────────────────────────── */
+.sms-receipt {
+  margin-top: 4px;
+  font-size: 10px;
+  color: #475569;
+  padding-left: 2px;
+}
+
+/* ── Progress bar ─────────────────────────────────────────── */
+.sms-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0 0 20px 6px;
+  overflow: hidden;
+}
+
+.sms-progress::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: #38bdf8;
+  transform-origin: left center;
+  animation: sms-progress-bar var(--toast-dur, 4000ms) linear forwards;
+}
+
+/* ── Spinner (loading) ────────────────────────────────────── */
+.sms-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #38bdf8;
+  border-radius: 50%;
+  animation: sms-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+/* ─── Per-type accent colours ──────────────────────────────── */
+.sms-toast--success .sms-progress::after { background: #4ade80; }
+.sms-toast--success .sms-tag            { color: #4ade80; }
+
+.sms-toast--error   .sms-progress::after { background: #f87171; }
+.sms-toast--error   .sms-tag            { color: #f87171; }
+
+.sms-toast--warning .sms-progress::after { background: #facc15; }
+.sms-toast--warning .sms-tag            { color: #facc15; }
+
+.sms-toast--info    .sms-progress::after { background: #38bdf8; }
+.sms-toast--info    .sms-tag            { color: #38bdf8; }
+
+.sms-toast--bad_request .sms-progress::after { background: #fb923c; }
+.sms-toast--bad_request .sms-tag            { color: #fb923c; }
+
+.sms-toast--loading .sms-tag            { color: #94a3b8; }
+
+/* ─── Animations ───────────────────────────────────────────── */
+@keyframes sms-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(110%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes sms-slide-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(110%);
+  }
+}
+
+@keyframes sms-progress-bar {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+
+@keyframes sms-spin {
+  to { transform: rotate(360deg); }
+}

@@ -5,6 +5,7 @@ import { Eye, EyeOff, Mail, Lock, User, ArrowRight, AlertCircle, CheckCircle } f
 import loginAnimation from "../assets/lottie/login.json";
 import registerAnimation from "../assets/lottie/register.json";
 import { useLogin, useRegister } from "../hooks/useAuth";
+import { useToast } from "../components/toast/ToastProvider";
 
 type FormMode = "login" | "register";
 
@@ -73,6 +74,7 @@ function InputField({
 
 export default function LoginPage() {
   const [mode, setMode] = useState<FormMode>("login");
+  const toast = useToast();
   const [registerSuccess, setRegisterSuccess] = useState(false);
 
   const loginMutation = useLogin();
@@ -101,9 +103,30 @@ export default function LoginPage() {
       setRegisterSuccess(true);
       setMode("login");
       setLoginForm({ email: registerForm.email, password: "" });
+      toast.success("Account Created", "Your account was successfully created! Please log in.");
       registerMutation.reset();
     }
-  }, [registerMutation.isSuccess]);
+  }, [registerMutation.isSuccess, registerForm.email, toast]);
+
+  // Use Effect to show login success
+  useEffect(() => {
+    if (loginMutation.isSuccess) {
+      toast.success("Login Successful", "Welcome back to the Prediction module.");
+      loginMutation.reset();
+    }
+  }, [loginMutation.isSuccess, toast, loginMutation]);
+
+  // Use Effect to show errors
+  useEffect(() => {
+    if (loginMutation.isError) {
+      toast.error("Login Failed", errorMsg);
+      loginMutation.reset();
+    }
+    if (registerMutation.isError) {
+      toast.error("Registration Failed", errorMsg);
+      registerMutation.reset();
+    }
+  }, [loginMutation.isError, registerMutation.isError, errorMsg, toast, loginMutation, registerMutation]);
 
   // Clear success banner when user switches mode or starts typing
   useEffect(() => {

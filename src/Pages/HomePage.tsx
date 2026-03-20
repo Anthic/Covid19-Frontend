@@ -4,6 +4,7 @@ import video from "../assets/video/Cinematic_Medical_Horror_Motion_Graphics.webm
 
 export default function HomePage() {
   const navigate = useNavigate();
+
   // const CLOUDINARY_EMBED_URL =
   //   "https://player.cloudinary.com/embed/?cloud_name=dgczshemc&public_id=Cinematic_Medical_Horror_Motion_Graphics_uhjpji&autoplay=true&loop=true&muted=true&controls=false&background=true&quality=auto";
 
@@ -13,29 +14,29 @@ export default function HomePage() {
       {/* ══════════════════════════════
           LEFT HALF — Text & Buttons
       ══════════════════════════════ */}
-      <div className="relative z-20 w-full md:w-[45%] min-h-screen flex flex-col justify-between items-start px-8 md:px-16 pt-36 pb-14">
+      <div className="relative z-20 w-full md:w-[55%] lg:w-[50%] min-h-screen flex flex-col justify-center items-start px-6 sm:px-12 md:px-16 py-20 gap-10 md:gap-14">
 
         {/* Banner Text */}
-        <div className="flex flex-col gap-4">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold tracking-wide uppercase leading-tight text-white drop-shadow-2xl">
-            Predicting <br /> the Unseen
+        <div className="flex flex-col gap-5 md:gap-7 mt-12 md:mt-0">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter uppercase leading-[1.1] text-white drop-shadow-2xl">
+            Predicting <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-200 to-slate-500">the Unseen</span>
           </h1>
-          <p className="text-xs md:text-sm text-slate-300 font-light tracking-[0.25em] uppercase max-w-sm">
-            Understand patterns · Analyze side effects · Secure the future
+          <p className="text-xs sm:text-sm lg:text-base text-slate-300 font-medium tracking-[0.15em] sm:tracking-[0.25em] uppercase max-w-xs sm:max-w-md lg:max-w-xl leading-relaxed">
+            Understand patterns <span className="mx-1 sm:mx-2 text-slate-500">•</span> Analyze side effects <span className="mx-1 sm:mx-2 text-slate-500">•</span> Secure the future
           </p>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full max-w-xs sm:max-w-md lg:max-w-lg">
           <button 
             onClick={() => navigate("/prediction")}
-            className="flex-1 px-6 py-4 rounded-full bg-white text-slate-900 font-bold text-base hover:bg-slate-100 transition-all duration-300 hover:scale-105 active:scale-95 shadow-2xl"
+            className="flex-1 px-6 sm:px-8 py-4 sm:py-5 rounded-full bg-white text-slate-900 font-bold text-sm sm:text-base lg:text-lg hover:bg-slate-100 transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)]"
           >
             Prediction
           </button>
           <button 
             onClick={() => navigate("/history")}
-            className="flex-1 px-6 py-4 rounded-full bg-transparent border border-white/60 text-white font-semibold text-base backdrop-blur-md hover:bg-white/10 transition-all duration-300 hover:scale-105 active:scale-95"
+            className="flex-1 px-6 sm:px-8 py-4 sm:py-5 rounded-full bg-slate-900/40 border border-white/30 text-white font-semibold text-sm sm:text-base lg:text-lg backdrop-blur-md hover:bg-white/10 hover:border-white/60 transition-all duration-300 hover:scale-105 active:scale-95"
           >
             History
           </button>
