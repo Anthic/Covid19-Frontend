@@ -85,9 +85,17 @@ export default function LoginPage() {
 
   const isLoading = loginMutation.isPending || registerMutation.isPending;
   const error = loginMutation.error || registerMutation.error;
-  const errorMsg =
-    (error as { response?: { data?: { message?: string } } })
-      ?.response?.data?.message ?? "Something went wrong";
+  let errorMsg = "Something went wrong";
+  if (error) {
+    const errData = (error as any)?.response?.data;
+    if (errData?.errorSources && errData.errorSources.length > 0) {
+      errorMsg = errData.errorSources[0].message;
+    } else if (errData?.message) {
+      errorMsg = errData.message;
+    } else if ((error as Error).message) {
+      errorMsg = (error as Error).message;
+    }
+  }
 
   const [loginForm, setLoginForm] = useState<LoginForm>({
     email: "",
@@ -99,6 +107,15 @@ export default function LoginPage() {
     email: "",
     password: "",
   });
+
+  const pwd = registerForm.password;
+  const pwdReqs = [
+    { label: "8+ characters", valid: pwd.length >= 8 },
+    { label: "Uppercase letter", valid: /[A-Z]/.test(pwd) },
+    { label: "Lowercase letter", valid: /[a-z]/.test(pwd) },
+    { label: "Number", valid: /\d/.test(pwd) },
+    { label: "Special char (!@#$)", valid: /[!@#$%^&*(),.?":{}|<>]/.test(pwd) },
+  ];
 
   // When register succeeds → switch to login, show success message
   useEffect(() => {
@@ -254,6 +271,19 @@ export default function LoginPage() {
                   value={registerForm.password}
                   onChange={(v) => setRegisterForm({ ...registerForm, password: v })}
                 />
+                {mode === "register" && registerForm.password.length > 0 && (
+                  <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-xs transition-all duration-300">
+                    <p className="text-slate-400 mb-2 font-medium tracking-wider uppercase text-[10px]">Password Requirements:</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {pwdReqs.map((req, i) => (
+                        <div key={i} className={`flex items-center gap-2 ${req.valid ? "text-emerald-400" : "text-slate-500"}`}>
+                          <CheckCircle size={14} className={req.valid ? "text-emerald-400" : "text-slate-600"} /> 
+                          {req.label}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </>
             )}
 
