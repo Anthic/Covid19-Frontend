@@ -167,12 +167,12 @@ export const HistoryPage = () => {
                 <BarChart data={riskDistData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
                   <XAxis
                     dataKey="name"
-                    tick={{ fill: "#64748b", fontSize: 10 }}
+                    tick={{ fill: "#e2e8f0", fontSize: 12, fontWeight: 500 }}
                     axisLine={false}
                     tickLine={false}
                   />
                   <YAxis
-                    tick={{ fill: "#64748b", fontSize: 10 }}
+                    tick={{ fill: "#e2e8f0", fontSize: 12, fontWeight: 500 }}
                     axisLine={false}
                     tickLine={false}
                     allowDecimals={false}
@@ -183,7 +183,10 @@ export const HistoryPage = () => {
                       border: "1px solid rgba(255,255,255,0.1)",
                       borderRadius: 12,
                       fontSize: 12,
+                      color: "#ffffff"
                     }}
+                    itemStyle={{ color: "#ffffff" }}
+                    labelStyle={{ color: "#94a3b8", marginBottom: 4 }}
                     formatter={(v) => [v, "Predictions"]}
                   />
                   <Bar dataKey="value" radius={[6, 6, 0, 0]} maxBarSize={48}>
@@ -208,13 +211,13 @@ export const HistoryPage = () => {
                   <CartesianGrid stroke="rgba(255,255,255,0.04)" strokeDasharray="4 4" />
                   <XAxis
                     dataKey="name"
-                    tick={{ fill: "#64748b", fontSize: 10 }}
+                    tick={{ fill: "#e2e8f0", fontSize: 12, fontWeight: 500 }}
                     axisLine={false}
                     tickLine={false}
                   />
                   <YAxis
                     domain={[0, 100]}
-                    tick={{ fill: "#64748b", fontSize: 10 }}
+                    tick={{ fill: "#e2e8f0", fontSize: 12, fontWeight: 500 }}
                     axisLine={false}
                     tickLine={false}
                     tickFormatter={(v) => `${v}%`}
@@ -225,7 +228,10 @@ export const HistoryPage = () => {
                       border: "1px solid rgba(255,255,255,0.1)",
                       borderRadius: 12,
                       fontSize: 12,
+                      color: "#ffffff"
                     }}
+                    itemStyle={{ color: "#ffffff" }}
+                    labelStyle={{ color: "#94a3b8", marginBottom: 4 }}
                     formatter={(v, name) => [`${v}%`, name === "probability" ? "Risk Probability" : "Confidence"]}
                   />
                   <Line

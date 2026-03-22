@@ -119,12 +119,22 @@ function FormSection({ title, icon: Icon, children }: { title: string; icon: Rea
   );
 }
 
-function RiskBadge({ level }: { level: "Low Risk" | "Moderate Risk" | "High Risk" }) {
+function RiskBadge({ level, solidWhite }: { level: "Low Risk" | "Moderate Risk" | "High Risk", solidWhite?: boolean }) {
   const map = {
     "Low Risk": { bg: "bg-emerald-500/10 border-emerald-500/30", text: "text-emerald-400", dot: "bg-emerald-400" },
     "Moderate Risk": { bg: "bg-amber-500/10 border-amber-500/30", text: "text-amber-400", dot: "bg-amber-400" },
     "High Risk": { bg: "bg-red-500/10 border-red-500/30", text: "text-red-400", dot: "bg-red-400" },
   };
+
+  if (solidWhite) {
+    return (
+      <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/40 bg-white/20 shadow-sm text-xs font-bold text-white tracking-wide">
+        <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+        {level}
+      </span>
+    );
+  }
+
   const s = map[level];
   return (
     <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-semibold ${s.bg} ${s.text}`}>
@@ -139,17 +149,19 @@ function RiskGauge({
   probability,
   riskLevel,
   confidence,
+  solidWhite,
 }: {
   probability: number;
   riskLevel: "Low Risk" | "Moderate Risk" | "High Risk";
   confidence?: number;
+  solidWhite?: boolean;
 }) {
   const colorMap = {
     "Low Risk": "#10b981",
     "Moderate Risk": "#f59e0b",
     "High Risk": "#ef4444",
   };
-  const color = colorMap[riskLevel];
+  const color = solidWhite ? "#ffffff" : colorMap[riskLevel];
   const pct = Math.round(probability * 100);
   const conf = confidence !== undefined ? Math.round(confidence * 100) : null;
   // Chart height must be 2× the width for a perfect half-donut
@@ -173,7 +185,7 @@ function RiskGauge({
             >
               <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
               <RadialBar
-                background={{ fill: "rgba(255,255,255,0.06)" }}
+                background={{ fill: solidWhite ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.06)" }}
                 dataKey="value"
                 angleAxisId={0}
                 cornerRadius={8}
@@ -186,13 +198,13 @@ function RiskGauge({
           <span className="text-4xl font-black tabular-nums" style={{ color }}>
             {pct}%
           </span>
-          <span className="text-[10px] text-slate-500 uppercase tracking-wider">Risk Score</span>
+          <span className={`text-[10px] uppercase tracking-wider ${solidWhite ? "text-white/80 font-semibold" : "text-slate-500"}`}>Risk Score</span>
         </div>
       </div>
       {conf !== null && (
-        <div className="flex items-center gap-1.5 text-xs text-slate-500">
-          <span className="w-2 h-2 rounded-full bg-violet-400 inline-block" />
-          Confidence: <span className="text-violet-300 font-semibold">{conf}%</span>
+        <div className={`flex items-center gap-1.5 text-xs ${solidWhite ? "text-white/90" : "text-slate-500"}`}>
+          <span className={`w-2 h-2 rounded-full inline-block ${solidWhite ? "bg-white" : "bg-violet-400"}`} />
+          Confidence: <span className={`font-semibold ${solidWhite ? "text-white tracking-wide" : "text-violet-300"}`}>{conf}%</span>
         </div>
       )}
     </div>
@@ -728,8 +740,8 @@ export default function PredictionPage() {
                     {mlResult.prediction === 1 ? "Side Effect Likely" : "Side Effect Unlikely"}
                   </h2>
                   <div className="mt-3 flex items-center gap-3">
-                    <RiskBadge level={mlResult.risk_level} />
-                    <span className="text-white/60 text-xs">
+                    <RiskBadge level={mlResult.risk_level} solidWhite={true} />
+                    <span className="text-white/90 font-medium text-xs drop-shadow-sm">
                       {mlResult.prediction === 1
                         ? "Your profile resembles those who reported side effects."
                         : "Your profile suggests a low probability of side effects."}
@@ -740,6 +752,7 @@ export default function PredictionPage() {
                   probability={mlResult.probability}
                   riskLevel={mlResult.risk_level}
                   confidence={mlResult.confidence}
+                  solidWhite={true}
                 />
               </div>
             </div>
