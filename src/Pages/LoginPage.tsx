@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useLottie } from "lottie-react";
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight, AlertCircle, CheckCircle } from "lucide-react";
 import loginAnimation from "../assets/lottie/login.json";
@@ -73,7 +73,10 @@ function InputField({
 }
 
 export default function LoginPage() {
-  const [mode, setMode] = useState<FormMode>("login");
+  const location = useLocation();
+  const navigate = useNavigate();
+  const mode: FormMode = location.pathname === "/register" ? "register" : "login";
+
   const toast = useToast();
   const [registerSuccess, setRegisterSuccess] = useState(false);
 
@@ -101,7 +104,7 @@ export default function LoginPage() {
   useEffect(() => {
     if (registerMutation.isSuccess) {
       setRegisterSuccess(true);
-      setMode("login");
+      navigate("/login");
       setLoginForm({ email: registerForm.email, password: "" });
       toast.success("Account Created", "Your account was successfully created! Please log in.");
       registerMutation.reset();
@@ -149,7 +152,7 @@ export default function LoginPage() {
   };
 
   const switchMode = (next: FormMode) => {
-    setMode(next);
+    navigate(`/${next}`);
     loginMutation.reset();
     registerMutation.reset();
     setRegisterSuccess(false);
