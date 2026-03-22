@@ -4,21 +4,27 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-
-const NAV_LINKS = [
-  { name: "Home", path: "/" },
-  { name: "Prediction", path: "/prediction" },
-  { name: "Contact Us", path: "/contact" },
-  { name: "Login", path: "/login" },
-];
+import { useAuth, useLogout } from "../../hooks/useAuth";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { pathname } = useLocation();
+  const { isLoggedIn } = useAuth();
+  const logoutMutation = useLogout();
+
   const menuOverlayRef = useRef<HTMLDivElement>(null);
-  const menuLinksRef = useRef<(HTMLAnchorElement | null)[]>([]);
+  const menuLinksRef = useRef<(HTMLElement | null)[]>([]);
   const magneticButtonRef = useRef<HTMLButtonElement>(null);
   const tl = useRef<gsap.core.Timeline>(null);
+
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "Prediction", path: "/prediction" },
+    { name: "Contact Us", path: "/contact" },
+  ];
+  if (!isLoggedIn) {
+    navLinks.push({ name: "Login", path: "/login" });
+  }
 
   // Close menu on route change — directly reverse the timeline, no setState cascade
   useEffect(() => {
@@ -132,7 +138,7 @@ export default function Navbar() {
         style={{ display: isOpen ? "flex" : "none" }}
       >
         <nav className="flex flex-col gap-6 md:gap-8 items-center text-center">
-          {NAV_LINKS.map((link, i) => (
+          {navLinks.map((link, i) => (
             <div key={link.name} className="overflow-hidden">
               <Link
                 to={link.path}
@@ -145,6 +151,22 @@ export default function Navbar() {
               </Link>
             </div>
           ))}
+          {isLoggedIn && (
+            <div className="overflow-hidden">
+              <button
+                ref={(el: HTMLButtonElement | null) => {
+                  menuLinksRef.current[navLinks.length] = el;
+                }}
+                onClick={() => {
+                  logoutMutation.mutate();
+                  tl.current?.reverse().then(() => setIsOpen(false));
+                }}
+                className="block text-4xl md:text-7xl font-bold uppercase tracking-widest text-red-500/80 hover:text-red-500 transition-all duration-300 hover:-translate-y-2 hover:scale-105 inline-block"
+              >
+                Logout
+              </button>
+            </div>
+          )}
         </nav>
 
         <div className="absolute bottom-10 text-white/30 text-sm tracking-widest uppercase">
